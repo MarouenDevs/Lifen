@@ -1,35 +1,29 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import DropFile from "../components/DropFile";
+import ServerInfos from "../components/ServerInfos";
 import { Alert } from "react-bootstrap";
-import { dropFileAction } from "../actions/file_actions";
-import { toast } from "react-toastify";
+import { dropFileAction, fetchInfosAction } from "../actions/file_actions";
 import Loader from "react-loader-spinner";
 const mapStateToProps = state => ({
-  file: state.file
+  file: state.file,
+  serverInfos: state.serverInfos
 });
 const mapDistpathToProps = dispatch => ({
-  dropFile: file => dispatch(dropFileAction(file))
+  dropFile: file => dispatch(dropFileAction(file)),
+  fetchInfos: () => dispatch(fetchInfosAction())
 });
 
 class FileDropZone extends Component {
+  componentWillMount() {
+    this.props.fetchInfos();
+  }
   onSetFile = file => {
     this.props.dropFile(file);
   };
 
   render() {
-    const { file } = this.props;
-
-    if (file.status === "success") {
-      toast.success("File uploaded !", {
-        position: toast.POSITION.TOP_CENTER
-      });
-    }
-    if (file.status === "fail") {
-      toast.error("File upload failed !", {
-        position: toast.POSITION.TOP_CENTER
-      });
-    }
+    const { file, serverInfos } = this.props;
 
     return (
       <>
@@ -46,6 +40,7 @@ class FileDropZone extends Component {
         <div className="row">
           <Alert variant="dark">File : {file.name}</Alert>
         </div>
+        <ServerInfos serverInfos={serverInfos} />
       </>
     );
   }
