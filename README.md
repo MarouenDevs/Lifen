@@ -14,3 +14,7 @@ Electron.js
 1.  npm install
 2.  npm run start ⇒ localhost:3000
 3.  npm run electron : desktop mode
+
+## WATCH FOLDER
+
+SET FOLDER PATH IN .env file

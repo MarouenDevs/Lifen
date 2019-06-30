@@ -1,15 +1,28 @@
+require("dotenv").config();
 const electron = require("electron");
 // Module to control application life.
 const app = electron.app;
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow;
 
-const path = require("path");
-const url = require("url");
-
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
+
+const StartWatcher = path => {
+  var chokidar = require("chokidar");
+
+  var watcher = chokidar.watch(path, {
+    ignored: "/[/\\]./",
+    persistent: true
+  });
+
+  // Declare the listeners of the watcher
+  watcher.on("add", function(path) {
+    console.log("File", path, "has been added");
+    //ipc.send('new_file',path)
+  });
+};
 
 function createWindow() {
   // Create the browser window.
@@ -23,6 +36,9 @@ function createWindow() {
 
   // and load the index.html of the app.
   mainWindow.loadURL("http://localhost:3000");
+  if (process.env.WATCH_FOLDER_PATH) {
+    StartWatcher(process.env.WATCH_FOLDER_PATH);
+  }
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools();

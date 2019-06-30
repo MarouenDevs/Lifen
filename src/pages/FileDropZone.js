@@ -5,6 +5,7 @@ import ServerInfos from "../components/ServerInfos";
 import { Alert } from "react-bootstrap";
 import { dropFileAction, fetchInfosAction } from "../actions/file_actions";
 import Loader from "react-loader-spinner";
+import { toast } from "react-toastify";
 const mapStateToProps = state => ({
   file: state.file,
   serverInfos: state.serverInfos
@@ -18,8 +19,21 @@ class FileDropZone extends Component {
   componentWillMount() {
     this.props.fetchInfos();
   }
+
   onSetFile = file => {
-    this.props.dropFile(file);
+    if (file.type !== "application/pdf") {
+      toast.warn("File type should be pdf !", {
+        position: toast.POSITION.TOP_CENTER
+      });
+    } else {
+      if (file.size > 2000000) {
+        toast.warn("Max file size 2 Mo!", {
+          position: toast.POSITION.TOP_CENTER
+        });
+      } else {
+        this.props.dropFile(file);
+      }
+    }
   };
 
   render() {
