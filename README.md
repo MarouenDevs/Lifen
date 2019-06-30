@@ -1,6 +1,6 @@
 # Welcome to LIFEN!
 
-Web and desktop application built with reactJs.
+Web and desktop application built in reactJs.
 
 # Stack
 
@@ -9,7 +9,7 @@ Thunk
 Bootstrap
 Electron.js
 
-## Who to run ?
+## How to run ?
 
 1.  npm install
 2.  npm run start ⇒ localhost:3000
@@ -17,4 +17,4 @@ Electron.js
 
 ## WATCH FOLDER
 
-SET FOLDER PATH IN .env file
+Set folder path in .env file
