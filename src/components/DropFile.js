@@ -8,13 +8,16 @@ class DropFile extends React.Component {
 
   render() {
     return (
-      <div id="react-file-drop-demo">
-        <FileDrop onDrop={this.handleDrop}>Drop some files here!</FileDrop>
-      </div>
+      <>
+        <div id="react-file-drop-demo">
+          <FileDrop onDrop={this.handleDrop}>Drop some files here!</FileDrop>
+        </div>
+      </>
     );
   }
 }
 DropFile.propTypes = {
-  onSetFile: PropTypes.func
+  onSetFile: PropTypes.func,
+  file: PropTypes.object
 };
 export default DropFile;

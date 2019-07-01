@@ -11,9 +11,9 @@ Electron.js
 
 ## How to run ?
 
-1.  npm install
-2.  npm run start ⇒ localhost:3000
-3.  npm run electron : desktop mode
+1.  yarn
+2.  yarn start ⇒ localhost:3000
+3.  yarn electron : desktop mode
 
 ## WATCH FOLDER
 

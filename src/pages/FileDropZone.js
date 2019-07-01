@@ -6,6 +6,14 @@ import { Alert } from "react-bootstrap";
 import { dropFileAction, fetchInfosAction } from "../actions/file_actions";
 import Loader from "react-loader-spinner";
 import { toast } from "react-toastify";
+
+let ipcRenderer = null;
+if(window.require){
+
+   ipcRenderer = window.require("electron").ipcRenderer;
+}
+
+
 const mapStateToProps = state => ({
   file: state.file,
   serverInfos: state.serverInfos
@@ -16,10 +24,25 @@ const mapDistpathToProps = dispatch => ({
 });
 
 class FileDropZone extends Component {
+
+  constructor(props){
+    super(props);
+    
+  }
   componentWillMount() {
     this.props.fetchInfos();
   }
 
+  componentDidMount(){
+    if(ipcRenderer) {
+      ipcRenderer.on('new_file' , (file)=> {
+        console.log(file);
+        // TO do issuer with ipcRenderer
+       });
+    }
+    
+  }
+ 
   onSetFile = file => {
     if (file.type !== "application/pdf") {
       toast.warn("File type should be pdf !", {
@@ -50,7 +73,10 @@ class FileDropZone extends Component {
         ) : (
           ""
         )}
-        <DropFile onSetFile={this.onSetFile} />
+        <DropFile
+          onSetFile={this.onSetFile}
+          file={serverInfos && serverInfos.entry ? serverInfos.entry[0] : {}}
+        />
         <div className="row">
           <Alert variant="dark">File : {file.name}</Alert>
         </div>
