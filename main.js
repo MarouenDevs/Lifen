@@ -1,6 +1,8 @@
 require("dotenv").config();
 const electron = require("electron");
-const ipcRenderer = require("electron").ipcRenderer;
+var ipcMain  = electron.ipcMain;
+const fs = require('fs');
+
 
 // Module to control application life.
 const app = electron.app;
@@ -9,26 +11,41 @@ const BrowserWindow = electron.BrowserWindow;
 
 let mainWindow;
 
-const StartWatcher = path => {
-  var chokidar = require("chokidar");
+function getByteArray(filePath){
+  let fileData = fs.readFileSync(filePath).toString('hex');
+  let result = []
+  for (var i = 0; i < fileData.length; i+=2)
+    result.push('0x'+fileData[i]+''+fileData[i+1])
+  return result;
+}
 
-  var watcher = chokidar.watch(path, {
-    ignored: "/[/\\]./",
-    persistent: true
-  });
-
+function StartWatcher(path){
+  
   // Declare the listeners of the watcher
-  watcher.on("add", function(path) {
-     console.log("File", path, "has been added");
-     ipcRenderer.send("new_file", path);
-  });
+  console.log(ipcMain);
+  ipcMain.on('ready',function(event){
+    var watch = require('watch');
+    const fileType = require('file-type');
+    watch.createMonitor(path, function (monitor) {
+      monitor.on("created", function (f, stat) {
+        const file = getByteArray(f);
+        const type = fileType(fs.readFileSync(f));
+        event.reply('newFile',
+         { data : file,
+          type});
+        
+      })
+    })
+  })
+ //ipcMain.send('asynchronous-message', 'ping')
+ 
 };
 
 function createWindow() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1000,
+    height: 1000,
     webPreferences: {
       devTools: true,
       nodeIntegration: true

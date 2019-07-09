@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 let ipcRenderer = null;
 if(window.require){
 
-   ipcRenderer = window.require("electron").ipcRenderer;
+  ipcRenderer = window.require("electron").ipcRenderer;
 }
 
 
@@ -35,15 +35,18 @@ class FileDropZone extends Component {
 
   componentDidMount(){
     if(ipcRenderer) {
-      ipcRenderer.on('new_file' , (file)=> {
-        console.log(file);
-        // TO do issuer with ipcRenderer
-       });
+      console.log(ipcRenderer);
+      ipcRenderer.send('ready','ok');
+      ipcRenderer.on('newFile',(event, file)=>{
+       const added = new File(file.data,'new_file',{type: file.type.mime});
+       this.onSetFile(added);
+      })
     }
     
   }
  
   onSetFile = file => {
+    console.log(file);
     if (file.type !== "application/pdf") {
       toast.warn("File type should be pdf !", {
         position: toast.POSITION.TOP_CENTER
